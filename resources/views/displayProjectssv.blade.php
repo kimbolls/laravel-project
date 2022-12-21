@@ -25,7 +25,7 @@
         <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
         <script src="vendor/jquery/jquery.min.js"></script>
         <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 
         <script>
@@ -82,130 +82,117 @@
 
 
     </head>
-    <header class="main-header clearfix" role="header">
-        <div class="logo">
-            <a href="#"><em>FYP</em> Manager</a>
-        </div>
-        <a href="#menu" class="menu-link"><i class="fa fa-bars"></i></a>
-        <nav id="menu" class="main-nav" role="navigation">
-            <ul class="main-menu">
-                <li><a href="/home" class="external">Home</a></li>
-                <li class="has-submenu"><a href="">Students</a>
-                    <ul class="sub-menu">
-                        <li><a href="/displaystudents" class="external">View Students</a></li>
-                        <li><a href="/add" class="external">Add Students</a></li>
-                    </ul>
-                </li>
-                <li class="has-submenu"><a href="">Projects</a>
-                    <ul class="sub-menu">
-                        <li><a href="/displayprojects" class="external">View Projects</a></li>
-                        <li><a href="/create" class="external">Add Projects</a></li>
-                    </ul>
-                </li>
-                <li><a href="{{ route('logout') }}" onclick="event.preventDefault();
+    <!--header-->
+  <header class="main-header clearfix" role="header">
+    <div class="logo">
+      <a href="#"><em>FYP</em> Manager</a>
+    </div>
+    <a href="#menu" class="menu-link"><i class="fa fa-bars"></i></a>
+    <nav id="menu" class="main-nav" role="navigation">
+      <ul class="main-menu">
+        <li><a href="/home" class="external">Home</a></li>
+        <li class="has-submenu"><a href="">Students</a>
+          <ul class="sub-menu">
+            <li><a href="/displaystudents" class="external">View Students</a></li>
+            @if(Auth::user()->usertype=="FYP Coordinator") <li><a href="/add" class="external">Add Students</a></li> @endif
+          </ul>
+        </li>
+        <li class="has-submenu"><a href="">Projects</a>
+          <ul class="sub-menu">
+            <li><a href="/displayprojects" class="external">View Projects</a></li>
+            @if(Auth::user()->usertype=="FYP Coordinator")<li><a href="/create" class="external">Add Projects</a></li> @endif
+          </ul>
+        </li>
+        <li><a href="{{ route('logout') }}" onclick="event.preventDefault();
                                     document.getElementById('logout-form').submit();">
-                        {{ __('Logout') }}
-                    </a>
+            {{ __('Logout') }}
+          </a>
 
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                        @csrf
-                    </form>
-                </li>
+          <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+            @csrf
+          </form>
+        </li>
 
-            </ul>
-        </nav>
-    </header>
+      </ul>
+    </nav>
+  </header>
 
     <!-- banner -->
-
-
-
     <!-- content here -->
-
     <section class="section courses min-vh-100" data-section="section4">
-        <div class="row " align="center">
+        <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="section-heading ">
-                    <h2>Add new Projects </h2>
+                    <h2>  Your Final Year Projects </h2>
                 </div>
             </div>
-            <div class="col-md-12 d-flex justify-content-center">
-                <form action="/createproject" method="post">
-                    @csrf
+            <div class="col-md-11 ">
+                <table class="table table-bordered table-hover table-dark table-striped center">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Project Title</th>
+                            <th>Student Name</th>
+                            <th>Project Category</th>
+                            <th>Superviser Name </th>
+                            <th>Examiner 1 Name</th>
+                            <th>Examiner 2 Name</th>
+                            <th>Progress</th>
+                            <th>Status</th>
+                            <th>Duration (in months) </th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Delete</th>
+                            <th>Update</th>
+                        </tr>
+                    </thead>
+                    @foreach($project as $dataproject)
+                    @if($dataproject->superviserid == Auth::user()->userid)
+                    <tr>
+                        <td>{{$dataproject["projecttitle"]}}</td>
+                        @foreach($student as $datastudent)
+                        @if($dataproject["studentid"] == $datastudent["studentid"])
+                        <td> {{$datastudent["username"]}}</td>
+                        @endif
+                        @endforeach
 
-                    <div class="form-row">
-                        <div class="form-group col">
-                            <label for="projecttitle" class="text-light"> Project Title </label>
-                            <input type="name" class="form-control" name="projecttitle" placeholder="Project Title" required>
-                        </div>
-                        <div class="form-group col">
-                            <label for="studentid" class="text-light">Student Name</label>
-                            <select name="studentid" class="form-control" id="studentid" required>
-                                <option selected disabled value="">Select One</option>
-                                @foreach($student as $datastudent)
-                                <option value="{{$datastudent["studentid"]}}" @if(!empty($datastudent['projectid'])) disabled @endif> {{$datastudent["username"]}} </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
+                        <td>{{$dataproject["category"]}}</td>
+                        @foreach($teacher as $datateacher)
+                        @if($dataproject["superviserid"] == $datateacher["userid"])
+                        <td> {{$datateacher["name"]}}</td>
+                        @endif
+                        @endforeach
+                        @foreach($teacher as $datateacher)
+                        @if($dataproject["examinerid1"] == $datateacher["userid"])
+                        <td> {{$datateacher["name"]}}</td>
+                        @endif
+                        @endforeach
+                        @foreach($teacher as $datateacher)
+                        @if($dataproject["examinerid2"] == $datateacher["userid"])
+                        <td> {{$datateacher["name"]}}</td>
+                        @endif
+                        @endforeach
+                        <td>{{$dataproject->progress ?? "Not yet Set"}}</td>
+                        <td>{{$dataproject->status ?? "Not yet Set"}}</td>
+                        <td>{{$dataproject->duration ?? "Not yet Set"}}</td>
+                        <td> {{$dataproject->startdate ?? "Not yet Set"}}</td>
+                        <td>{{$dataproject->enddate ?? "Not yet Set"}}</td>
+                        <td><a href={{"/deleteproject/".$dataproject["projectid"]}}>Delete</a></td>
+                        <td><a href={{"/updateproject/".$dataproject["projectid"]}}>Update</a></td>
+                    </tr>
+                    
+                    @endif
+                    @endforeach
+                </table>
 
-                    <div class="form-row">
-                        <div class="form-group col">
-                            <label class="text-light" for="category">Category</label>
-                            <select name="category" class="form-control " id="category" required>
-                                <option selected disabled value="">Select One</option>
-                                <option value="Research Project">Research Project</option>
-                                <option value="Development Project">Development Project </option>
-                            </select>
-                        </div>
-                        <div class="form-group col">
-                            <label class="text-light" for="superviserid">Superviser ID</label>
-                            <select name="superviserid" class="form-control" id="superviserid" required>
-                                <option selected disabled value="">Select One</option>
-                                @foreach($teacher as $datateacher)
-                                @if ($datateacher['usertype']=='Superviser')
-                                <option value="{{$datateacher["userid"]}}"> {{$datateacher["name"]}} </option>
-                                @endif
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
+                <!-- Content Division -->
 
-                    <div class="form-row">
-                        <div class="form-group col">
-                            <label class="text-light" for="examinerid1">Examiner 1</label>
-                            <select name="examinerid1" class="form-control" id="examinerid1" required>
-                                <option selected disabled value="">Select One</option>
-                                @foreach($teacher as $datateacher)
-                                @if ($datateacher['usertype']=='Superviser')
-                                <option value="{{$datateacher["userid"]}}"> {{$datateacher["name"]}} </option>
-                                @endif
-                                @endforeach
-                            </select>
-                        </div>
+                <!-- Table -->
 
-                        <div class="form-group col">
-                            <label class="text-light" for="examinerid1">Examiner 2</label>
-                            <select name="examinerid2" class="form-control " id="examinerid2" required>
-                                <option selected disabled value="">Select One</option>
-                                @foreach($teacher as $datateacher)
-                                @if ($datateacher['usertype']=='Superviser')
-                                <option value="{{$datateacher["userid"]}}"> {{$datateacher["name"]}} </option>
-                                @endif
-                                @endforeach
-                            </select>
-
-                        </div>
-                    </div>
-                    <input type=reset class="btn btn-secondary mb-2" value="Reset">
-                    <input type=submit class="btn btn-primary mb-2" value="Add Record">
-
-
-                </form>
+                <!-- table end -->
             </div>
         </div>
     </section>
-
+    <!-- Div end -->
 
 
 

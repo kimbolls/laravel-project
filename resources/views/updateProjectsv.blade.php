@@ -140,7 +140,7 @@
                         <!-- title -->
                         <div class="form-group col">
                             <label for="projectittle" class="text-light"> Project Title </label>
-                            <input type="name" class="form-control" name="projecttitle" value={{$selected->projecttitle}}>
+                            <input type="name" class="form-control" readonly name="projecttitle" value={{$selected->projecttitle}}>
                         </div>
                     </div>
 
@@ -148,14 +148,14 @@
                     <div class="form-row">
                         <div class="form-group col">
                             <label for="category" class="text-light"> Category </label>
-                            <select name="category" class="form-control" id="category">
+                            <select name="category" class="form-control" disabled id="category">
                                 <option value="Research Project">Research Project</option>
                                 <option value="Development Project">Development Project </option>
                             </select>
                         </div>
                         <div class="form-group col">
                             <label for="superviserid" class="text-light"> Superviser ID </label>
-                            <select name="superviserid" class="form-control" id="superviserid">
+                            <select name="superviserid" class="form-control" disabled id="superviserid">
                                 @foreach($teacher as $datateacher)
                                 @if ($datateacher['usertype']=='Superviser')
                                 <option value="{{$datateacher["userid"]}}" @if($selected->superviserid == $datateacher->userid) selected @endif> {{$datateacher["name"]}} </option>
@@ -168,7 +168,7 @@
                     <div class="form-row">
                         <div class="form-group col">
                             <label for="examinerid1" class="text-light"> Examiner 1 Name : </label>
-                            <select name="examinerid1" class="form-control" id="examinerid1">
+                            <select name="examinerid1" class="form-control" disabled id="examinerid1">
                                 @foreach($teacher as $datateacher)
                                 @if ($datateacher['usertype']=='Superviser')
                                 <option value="{{$datateacher["userid"]}}" @if($selected->examinerid1 == $datateacher->userid) selected @endif> {{$datateacher["name"]}} </option>
@@ -178,7 +178,7 @@
                         </div>
                         <div class="form-group col">
                             <label for="examinerid2" class="text-light"> Examiner 2 Name : </label>
-                            <select name="examinerid2" class="form-control" id="examinerid2">
+                            <select name="examinerid2" class="form-control" disabled id="examinerid2">
                                 @foreach($teacher as $datateacher)
                                 @if ($datateacher['usertype']=='Superviser')
                                 <option value="{{$datateacher["userid"]}}" @if($selected->examinerid2 == $datateacher->userid) selected @endif> {{$datateacher["name"]}} </option>
@@ -192,18 +192,18 @@
                     <div class="form-row">
                         <div class="form-group col">
                             <label for="startdate" class="text-light"> Start Date : </label>
-                            <input type="date" class="form-control " readonly name="startdate" id="startdate" value={{$selected->startdate}}>
+                            <input type="date" class="form-control "  required name="startdate" id="startdate" value={{$selected->startdate}}>
                         </div>
                         <div class="form-group col">
                             <label for="startdate" class="text-light"> End Date : </label>
-                            <input type="date" class="form-control " readonly name="enddate" id="enddate" value={{$selected->enddate}}>
+                            <input type="date" class="form-control "   required name="enddate" id="enddate" value={{$selected->enddate}}>
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group col">
                             <label for="progress" class="text-light"> Progress : </label>
-                            <select name="progress" class="form-control " disabled id="progress">
+                            <select name="progress" class="form-control "  required id="progress">
                             <option value="" @if($selected->progress == "") selected @endif> Not Yet Set </option>
                                 <option value="Milestone 1" @if($selected->progress == "Milestone 1") selected @endif> Milestone 1</option>
                                 <option value="Milestone 2" @if($selected->progress == "Milestone 2") selected @endif> Milestone 2</option>
@@ -212,7 +212,7 @@
                         </div>
                         <div class="form-group col">
                             <label for="status" class="text-light"> Status : </label>
-                            <select name="status" class="form-control " disabled id="status">
+                            <select name="status" class="form-control "  required id="status">
                                 <option value="" @if($selected->status == "") selected @endif> Not Yet Set </option>
                                 <option value="On Track" @if($selected->status == "On track") selected @endif> On Track</option>
                                 <option value="Delayed" @if($selected->status == "Delayed") selected @endif> Delayed</option>

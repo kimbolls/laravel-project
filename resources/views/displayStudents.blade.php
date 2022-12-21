@@ -22,6 +22,7 @@
         <link rel="stylesheet" href="assets/css/lightbox.css">
 
     </head>
+    <!--header-->
     <header class="main-header clearfix" role="header">
         <div class="logo">
             <a href="#"><em>FYP</em> Manager</a>
@@ -33,13 +34,13 @@
                 <li class="has-submenu"><a href="">Students</a>
                     <ul class="sub-menu">
                         <li><a href="/displaystudents" class="external">View Students</a></li>
-                        <li><a href="/add" class="external">Add Students</a></li>
+                        @if(Auth::user()->usertype=="FYP Coordinator") <li><a href="/add" class="external">Add Students</a></li> @endif
                     </ul>
                 </li>
                 <li class="has-submenu"><a href="">Projects</a>
                     <ul class="sub-menu">
                         <li><a href="/displayprojects" class="external">View Projects</a></li>
-                        <li><a href="/create" class="external">Add Projects</a></li>
+                        @if(Auth::user()->usertype=="FYP Coordinator")<li><a href="/create" class="external">Add Projects</a></li> @endif
                     </ul>
                 </li>
                 <li><a href="{{ route('logout') }}" onclick="event.preventDefault();
@@ -62,7 +63,11 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="section-heading ">
-                    <h2>Students List</h2>
+                    @if(Auth::user()->usertype=="Superviser")
+                    <h2>Your Students List</h2>
+                    @else
+                    <h2>All Students List</h2>
+                    @endif
                 </div>
             </div>
             <div class="col-md-10 ">
@@ -73,9 +78,10 @@
                             <th>Student Name</th>
                             <th>Project Name</th>
                             <th>Superviser </th>
-                            <th>Delete Student with Database</th>
+                            <th>Delete Student with Project</th>
                         </tr>
                     </thead>
+                    @if(Auth::user()->usertype=="FYP Coordinator")
                     @foreach ($student as $datastudent)
                     <tr>
                         <td>{{$datastudent->studentid}}</td>
@@ -84,7 +90,21 @@
                         <td>@if($datastudent->superviserid == NULL) Not yet Assigned @else @foreach($teacher as $datateacher) @if($datateacher->userid == $datastudent->superviserid) {{$datateacher->name}} @endif @endforeach @endif</td>
                         <td><a href={{"/deletestudent/".$datastudent["studentid"]}}>Delete</a></td>
                     </tr>
+
                     @endforeach
+                    @elseif(Auth::user()->usertype=="Superviser")
+                    @foreach($student as $datastudent)
+                    @if($datastudent->superviserid == Auth::user()->userid)
+                    <tr>
+                        <td>{{$datastudent->studentid}}</td>
+                        <td>{{$datastudent->username}}</td>
+                        <td>@if($datastudent->projectid == NULL) Not yet Assigned @else @foreach($project as $dataproject) @if($dataproject->projectid == $datastudent->projectid) {{$dataproject->projecttitle}} @endif @endforeach @endif</td>
+                        <td>@if($datastudent->superviserid == NULL) Not yet Assigned @else @foreach($teacher as $datateacher) @if($datateacher->userid == $datastudent->superviserid) {{$datateacher->name}} @endif @endforeach @endif</td>
+                        <td><a href={{"/deletestudent/".$datastudent["studentid"]}}>Delete</a></td>
+                    </tr>
+                    @endif
+                    @endforeach
+                    @endif
                 </table>
             </div>
         </div>

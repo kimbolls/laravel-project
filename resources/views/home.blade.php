@@ -42,13 +42,13 @@
         <li class="has-submenu"><a href="">Students</a>
           <ul class="sub-menu">
             <li><a href="/displaystudents" class="external">View Students</a></li>
-            <li><a href="/add" class="external">Add Students</a></li>
+            @if(Auth::user()->usertype=="FYP Coordinator") <li><a href="/add" class="external">Add Students</a></li> @endif
           </ul>
         </li>
         <li class="has-submenu"><a href="">Projects</a>
           <ul class="sub-menu">
             <li><a href="/displayprojects" class="external">View Projects</a></li>
-            <li><a href="/create" class="external">Add Projects</a></li>
+            @if(Auth::user()->usertype=="FYP Coordinator")<li><a href="/create" class="external">Add Projects</a></li> @endif
           </ul>
         </li>
         <li><a href="{{ route('logout') }}" onclick="event.preventDefault();

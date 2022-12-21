@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\student;
 use App\Models\project;
@@ -45,7 +46,11 @@ class HomeController extends Controller
         $teacher = user::all();
         $student = student::all();
         $project = project::all();
-        return view("displayProjects", ['teacher' => $teacher, 'student' => $student, 'project' => $project]);
+        if (Auth::user()->usertype == "Superviser") {
+            return view("displayProjectssv", ['teacher' => $teacher, 'student' => $student, 'project' => $project]);
+        } else {
+            return view("displayProjects", ['teacher' => $teacher, 'student' => $student, 'project' => $project]);
+        }
     }
 
     public function displaystudents()
@@ -63,26 +68,43 @@ class HomeController extends Controller
         $student = student::all();
         $project = project::all();
         $selected = project::find($id);
-        return view("updateProjectsadmin", ['teacher' => $teacher, 'student' => $student, 'project' => $project, 'selected' => $selected]);
+        if (Auth::user()->usertype == "Superviser") {
+            return view("updateProjectsv", ['teacher' => $teacher, 'student' => $student, 'project' => $project, 'selected' => $selected]);
+        } else {
+            return view("updateProjectsadmin", ['teacher' => $teacher, 'student' => $student, 'project' => $project, 'selected' => $selected]);
+        }
     }
 
     public function updateprojects(Request $req)
     {
         $project = project::find($req->projectid);
 
-        $project->studentid = $req->studentid;
-        $project->projecttitle = $req->projecttitle;
-        $project->category = $req->category;
-        $project->superviserid = $req->superviserid;
-        $project->examinerid1 = $req->examinerid1;
-        $project->examinerid2 = $req->examinerid2;
-        $project->startdate = $req->startdate;
-        $project->enddate = $req->enddate;
-        $project->progress = $req->progress;
-        $project->status = $req->status;
-        $project->duration = $req->duration;
 
-        $project->save();
+
+        if (Auth::user()->usertype == "Superviser") {
+            $project->startdate = $req->startdate;
+            $project->enddate = $req->enddate;
+            $project->progress = $req->progress;
+            $project->status = $req->status;
+            $project->duration = $req->duration;
+            $project->save();
+        } else {
+            $project->studentid = $req->studentid;
+            $project->projecttitle = $req->projecttitle;
+            $project->category = $req->category;
+            $project->superviserid = $req->superviserid;
+            $project->examinerid1 = $req->examinerid1;
+            $project->examinerid2 = $req->examinerid2;
+            $project->save();
+            if ($project->save()) {
+                $student = student::find($req->studentid);
+
+                $student->projectid = $project->projectid;
+                $student->superviserid = $project->superviserid;
+                $student->save();
+            }
+        }
+
 
         return redirect('/displayprojects');
     }
@@ -124,20 +146,21 @@ class HomeController extends Controller
             $student->superviserid = $project->superviserid;
             $student->save();
         }
-        return redirect('/home');
+
+        return redirect('/displayprojects');
     }
 
     function deleteprojects($id)
     {
-        DB::update('update students set superviserid = NULL,projectid = NULL where projectid=?',[$id]);
-        DB::delete('delete from projects where projectid=?',[$id]);
+        DB::update('update students set superviserid = NULL,projectid = NULL where projectid=?', [$id]);
+        DB::delete('delete from projects where projectid=?', [$id]);
         return redirect('/displayprojects');
     }
 
     function deletestudents($id)
     {
-        DB::delete('delete from students where studentid=?',[$id]);
-        DB::delete('delete from projects where studentid=?',[$id]);
+        DB::delete('delete from students where studentid=?', [$id]);
+        DB::delete('delete from projects where studentid=?', [$id]);
         return redirect('/displaystudents');
     }
 

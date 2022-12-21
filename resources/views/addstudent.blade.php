@@ -22,39 +22,40 @@
         <link rel="stylesheet" href="assets/css/lightbox.css">
 
     </head>
-    <header class="main-header clearfix" role="header">
-        <div class="logo">
-            <a href="#"><em>FYP</em> Manager</a>
-        </div>
-        <a href="#menu" class="menu-link"><i class="fa fa-bars"></i></a>
-        <nav id="menu" class="main-nav" role="navigation">
-            <ul class="main-menu">
-                <li><a href="/home" class="external">Home</a></li>
-                <li class="has-submenu"><a href="">Students</a>
-                    <ul class="sub-menu">
-                        <li><a href="/displaystudents" class="external">View Students</a></li>
-                        <li><a href="/add" class="external">Add Students</a></li>
-                    </ul>
-                </li>
-                <li class="has-submenu"><a href="">Projects</a>
-                    <ul class="sub-menu">
-                        <li><a href="/displayprojects" class="external">View Projects</a></li>
-                        <li><a href="/create" class="external">Add Projects</a></li>
-                    </ul>
-                </li>
-                <li><a href="{{ route('logout') }}" onclick="event.preventDefault();
+    <!--header-->
+  <header class="main-header clearfix" role="header">
+    <div class="logo">
+      <a href="#"><em>FYP</em> Manager</a>
+    </div>
+    <a href="#menu" class="menu-link"><i class="fa fa-bars"></i></a>
+    <nav id="menu" class="main-nav" role="navigation">
+      <ul class="main-menu">
+        <li><a href="/home" class="external">Home</a></li>
+        <li class="has-submenu"><a href="">Students</a>
+          <ul class="sub-menu">
+            <li><a href="/displaystudents" class="external">View Students</a></li>
+            @if(Auth::user()->usertype=="FYP Coordinator") <li><a href="/add" class="external">Add Students</a></li> @endif
+          </ul>
+        </li>
+        <li class="has-submenu"><a href="">Projects</a>
+          <ul class="sub-menu">
+            <li><a href="/displayprojects" class="external">View Projects</a></li>
+            @if(Auth::user()->usertype=="FYP Coordinator")<li><a href="/create" class="external">Add Projects</a></li> @endif
+          </ul>
+        </li>
+        <li><a href="{{ route('logout') }}" onclick="event.preventDefault();
                                     document.getElementById('logout-form').submit();">
-                        {{ __('Logout') }}
-                    </a>
+            {{ __('Logout') }}
+          </a>
 
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                        @csrf
-                    </form>
-                </li>
+          <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+            @csrf
+          </form>
+        </li>
 
-            </ul>
-        </nav>
-    </header>
+      </ul>
+    </nav>
+  </header>
 
 
     <section class="section courses min-vh-100" data-section="section4">
@@ -69,15 +70,15 @@
                     @csrf
                     <div class="form-row">
                         <div class="form-group col-auto">
-                            <label for="studentid" class="text-light"> Student ID  </label>
-                            <input type="text" class="form-control" name="studentid" id="studentid" placeholder="Student ID ">
+                            <label for="studentid" class="text-light"> Student ID </label>
+                            <input type="text" class="form-control" required name="studentid" id="studentid" placeholder="Student ID ">
 
                         </div>
 
 
                         <div class="form-group col-auto">
-                            <label for="username" class="text-light"> Student Name  </label>
-                            <input type="text" class="form-control" name="username" placeholder="Student Name ">
+                            <label for="username" class="text-light"> Student Name </label>
+                            <input type="text" class="form-control" required name="username" placeholder="Student Name ">
 
                         </div>
                     </div>
