@@ -20,6 +20,9 @@
         <link rel="stylesheet" href="assets/css/templatemo-grad-school.css">
         <link rel="stylesheet" href="assets/css/owl.css">
         <link rel="stylesheet" href="assets/css/lightbox.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="vendor/jquery/jquery.min.js"></script>
+        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     </head>
     <!--header-->
@@ -63,11 +66,13 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="section-heading ">
-                    @if(Auth::user()->usertype=="Superviser")
-                    <h2>Your Students List</h2>
-                    @else
-                    <h2>All Students List</h2>
-                    @endif
+                    
+                    <h2>All Students List</h2> <br><br>
+                    <div class="caption header-text text-light">
+                        <h6><em>VIEW ALL STUDENT DETAILS </em></h6>
+                    </div>
+                   
+                    
                 </div>
             </div>
             <div class="col-md-10 ">
@@ -78,7 +83,7 @@
                             <th>Student Name</th>
                             <th>Project Name</th>
                             <th>Superviser </th>
-                            <th>Delete Student with Project</th>
+                            @if(Auth::user()->usertype=="FYP Coordinator") <th>Delete Student with Project</th> @endif
                         </tr>
                     </thead>
                     @if(Auth::user()->usertype=="FYP Coordinator")
@@ -88,24 +93,33 @@
                         <td>{{$datastudent->username}}</td>
                         <td>@if($datastudent->projectid == NULL) Not yet Assigned @else @foreach($project as $dataproject) @if($dataproject->projectid == $datastudent->projectid) {{$dataproject->projecttitle}} @endif @endforeach @endif</td>
                         <td>@if($datastudent->superviserid == NULL) Not yet Assigned @else @foreach($teacher as $datateacher) @if($datateacher->userid == $datastudent->superviserid) {{$datateacher->name}} @endif @endforeach @endif</td>
-                        <td><a href={{"/deletestudent/".$datastudent["studentid"]}}>Delete</a></td>
+                        <td><a onclick="return confirm('Are you sure you want to delete this? This will also delete the project if student are assigned to one.')" href={{"/deletestudent/".$datastudent["studentid"]}}><button type="button" class="btn btn-outline-danger external">Delete</button></a> </td>
                     </tr>
 
                     @endforeach
                     @elseif(Auth::user()->usertype=="Superviser")
                     @foreach($student as $datastudent)
-                    @if($datastudent->superviserid == Auth::user()->userid)
+                   
                     <tr>
                         <td>{{$datastudent->studentid}}</td>
                         <td>{{$datastudent->username}}</td>
                         <td>@if($datastudent->projectid == NULL) Not yet Assigned @else @foreach($project as $dataproject) @if($dataproject->projectid == $datastudent->projectid) {{$dataproject->projecttitle}} @endif @endforeach @endif</td>
                         <td>@if($datastudent->superviserid == NULL) Not yet Assigned @else @foreach($teacher as $datateacher) @if($datateacher->userid == $datastudent->superviserid) {{$datateacher->name}} @endif @endforeach @endif</td>
-                        <td><a href={{"/deletestudent/".$datastudent["studentid"]}}>Delete</a></td>
+                
                     </tr>
-                    @endif
+                   
                     @endforeach
                     @endif
                 </table>
+                <div class="row justify-content-center">
+                    <span>
+                        {{$student->render()}}
+                    </span>
+                </div>
+                <br><br>
+                <div class="row justify-content-center">
+                    @if(Auth::user()->usertype=="FYP Coordinator") <a href="/add"><button type="button" class="btn btn-outline-warning external">Add More Students</button></a> @endif
+                </div>
             </div>
         </div>
     </section>
@@ -125,6 +139,7 @@
     <!-- Footer end -->
     <!-- Scripts -->
     <!-- Bootstrap core JavaScript -->
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

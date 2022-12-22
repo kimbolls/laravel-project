@@ -8,6 +8,8 @@ use App\Models\student;
 use App\Models\project;
 use App\Models\user;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+
 
 class HomeController extends Controller
 {
@@ -45,7 +47,7 @@ class HomeController extends Controller
     {
         $teacher = user::all();
         $student = student::all();
-        $project = project::all();
+        $project = project::paginate(5);
         if (Auth::user()->usertype == "Superviser") {
             return view("displayProjectssv", ['teacher' => $teacher, 'student' => $student, 'project' => $project]);
         } else {
@@ -53,9 +55,14 @@ class HomeController extends Controller
         }
     }
 
+    public function displayAddStudent()
+    {
+        return view("addstudent");
+    }
+
     public function displaystudents()
     {
-        $student = student::all();
+        $student = student::paginate(5);
         $project = project::all();
         $teacher = user::all();
 
@@ -115,11 +122,22 @@ class HomeController extends Controller
     {
         $student = new student;
 
-        $student->studentid = $req->studentid;
-        $student->username = $req->username;
-        $student->projectid = NULL;
-        $student->save();
-        return redirect('/displaystudents');
+        try {
+
+            $student->studentid = $req->studentid;
+            $student->username = $req->username;
+            $student->projectid = NULL;
+            $student->save();
+            return redirect('/displaystudents'); 
+        } catch(\Illuminate\Database\QueryException $e){
+            $errorCode = $e->errorInfo[1];
+            if($errorCode == '1062'){
+                dd('Duplicate Entry');
+                return redirect('/add');
+            }
+        }
+
+        
     }
 
     public function addnewproject(Request $req)

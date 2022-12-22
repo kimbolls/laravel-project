@@ -23,65 +23,9 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="vendor/jquery/jquery.min.js"></script>
         <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="vendor/jquery/jquery.min.js"></script>
-        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-
-        <script>
-            $(document).ready(function() {
-                $("select").each(function(cSelect) {
-                    $(this).data('stored-value', $(this).val());
-                });
-
-                $("select").change(function() {
-                    var cSelected = $(this).val();
-                    var cPrevious = $(this).data('stored-value');
-                    $(this).data('stored-value', cSelected);
-
-                    var otherSelects = $("select").not(this);
-
-                    otherSelects.find('option[value=' + cPrevious + ']').removeAttr('disabled');
-                    otherSelects.find('option[value=' + cSelected + ']').attr('disabled', 'disabled');
-                });
-            });
-        </script>
-        <script>
-            const setup = () => {
-                let firstDate = $('#startdate').val();
-                let secondDate = $('#enddate').val();
-                const findTheDifferenceBetweenTwoDates = (firstDate, secondDate) => {
-                    firstDate = new Date(firstDate);
-                    secondDate = new Date(secondDate);
-                    let timeDifference = Math.abs(secondDate.getTime() - firstDate.getTime());
-                    let millisecondsInADay = (1000 * 3600 * 24);
-                    let differenceOfDays = Math.ceil(timeDifference / millisecondsInADay);
-                    return differenceOfDays;
-                }
-                let result = findTheDifferenceBetweenTwoDates(firstDate, secondDate);
-                result = Math.floor(result / 30)
-                $("#duration").val(result);
-            }
-
-            $(document).ready(function() {
-                $('#startdate').change(function() {
-                    if ($('#enddate').val() != '') {
-                        setup();
-                    }
-                })
-                $('#enddate').change(function() {
-                    if ($('#startdate').val() != '') {
-                        setup();
-                    }
-                })
-            });
-        </script>
-
-
-
-
 
     </head>
+    <!--header-->
     <header class="main-header clearfix" role="header">
         <div class="logo">
             <a href="#"><em>FYP</em> Manager</a>
@@ -93,17 +37,17 @@
                 <li class="has-submenu"><a href="">Students</a>
                     <ul class="sub-menu">
                         <li><a href="/displaystudents" class="external">View Students</a></li>
-                        <li><a href="/add" class="external">Add Students</a></li>
+                        @if(Auth::user()->usertype=="FYP Coordinator") <li><a href="/add" class="external">Add Students</a></li> @endif
                     </ul>
                 </li>
                 <li class="has-submenu"><a href="">Projects</a>
                     <ul class="sub-menu">
                         <li><a href="/displayprojects" class="external">View Projects</a></li>
-                        <li><a href="/create" class="external">Add Projects</a></li>
+                        @if(Auth::user()->usertype=="FYP Coordinator")<li><a href="/create" class="external">Add Projects</a></li> @endif
                     </ul>
                 </li>
                 <li><a href="{{ route('logout') }}" onclick="event.preventDefault();
-                                    document.getElementById('logout-form').submit();">
+                            document.getElementById('logout-form').submit();">
                         {{ __('Logout') }}
                     </a>
 
@@ -122,11 +66,14 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="section-heading ">
-                    <h2>All Final Year Projects</h2>
+                    <h2>All Final Year Projects</h2><br><br>
+                    <div class="caption header-text text-light">
+                        <h6><em>UPDATE OR DELETE PROJECTS</em></h6>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-11 ">
-                <table class="table table-bordered table-hover table-dark table-striped center">
+            <div class="col-md-12"">
+                <table class="table table-bordered  table-hover table-dark table-striped center">
                     <thead class="thead-light">
                         <tr>
                             <th>Project Title</th>
@@ -174,22 +121,25 @@
                         <td>{{$dataproject->duration ?? "Not yet Set"}}</td>
                         <td> {{$dataproject->startdate ?? "Not yet Set"}}</td>
                         <td>{{$dataproject->enddate ?? "Not yet Set"}}</td>
-                        <td><a href={{"/deleteproject/".$dataproject["projectid"]}}>Delete</a></td>
-                        <td><a href={{"/updateproject/".$dataproject["projectid"]}}>Update</a></td>
+                        <td><a onclick="return confirm('Are you sure you want to delete that?')" href={{"/deleteproject/".$dataproject["projectid"]}}><button type="button" class="btn btn-outline-danger external">Delete</button></a> </td>
+                        <td><a href={{"/updateproject/".$dataproject["projectid"]}}><button type="button" class="btn btn-outline-info external">Update</button></a> </td>
                     </tr>
                     @endforeach
                 </table>
-
-                <!-- Content Division -->
-
-                <!-- Table -->
-
-                <!-- table end -->
             </div>
+        </div>
+        <div class="row justify-content-center">
+            <span>
+                {{$project->render()}}
+            </span>
+        </div>
+        <br><br>
+        <div class="row justify-content-center">
+            @if(Auth::user()->usertype=="FYP Coordinator") <a href="/create"><button type="button" class="btn btn-outline-warning external">Assign Projects</button></a> @endif
+        </div>
         </div>
     </section>
     <!-- Div end -->
-
 
 
     <!-- Footer -->
@@ -208,6 +158,7 @@
     <!-- Footer end -->
     <!-- Scripts -->
     <!-- Bootstrap core JavaScript -->
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

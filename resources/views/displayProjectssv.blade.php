@@ -23,9 +23,6 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="vendor/jquery/jquery.min.js"></script>
         <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="vendor/jquery/jquery.min.js"></script>
-        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 
         <script>
@@ -83,39 +80,39 @@
 
     </head>
     <!--header-->
-  <header class="main-header clearfix" role="header">
-    <div class="logo">
-      <a href="#"><em>FYP</em> Manager</a>
-    </div>
-    <a href="#menu" class="menu-link"><i class="fa fa-bars"></i></a>
-    <nav id="menu" class="main-nav" role="navigation">
-      <ul class="main-menu">
-        <li><a href="/home" class="external">Home</a></li>
-        <li class="has-submenu"><a href="">Students</a>
-          <ul class="sub-menu">
-            <li><a href="/displaystudents" class="external">View Students</a></li>
-            @if(Auth::user()->usertype=="FYP Coordinator") <li><a href="/add" class="external">Add Students</a></li> @endif
-          </ul>
-        </li>
-        <li class="has-submenu"><a href="">Projects</a>
-          <ul class="sub-menu">
-            <li><a href="/displayprojects" class="external">View Projects</a></li>
-            @if(Auth::user()->usertype=="FYP Coordinator")<li><a href="/create" class="external">Add Projects</a></li> @endif
-          </ul>
-        </li>
-        <li><a href="{{ route('logout') }}" onclick="event.preventDefault();
+    <header class="main-header clearfix" role="header">
+        <div class="logo">
+            <a href="#"><em>FYP</em> Manager</a>
+        </div>
+        <a href="#menu" class="menu-link"><i class="fa fa-bars"></i></a>
+        <nav id="menu" class="main-nav" role="navigation">
+            <ul class="main-menu">
+                <li><a href="/home" class="external">Home</a></li>
+                <li class="has-submenu"><a href="">Students</a>
+                    <ul class="sub-menu">
+                        <li><a href="/displaystudents" class="external">View Students</a></li>
+                        @if(Auth::user()->usertype=="FYP Coordinator") <li><a href="/add" class="external">Add Students</a></li> @endif
+                    </ul>
+                </li>
+                <li class="has-submenu"><a href="">Projects</a>
+                    <ul class="sub-menu">
+                        <li><a href="/displayprojects" class="external">View Projects</a></li>
+                        @if(Auth::user()->usertype=="FYP Coordinator")<li><a href="/create" class="external">Add Projects</a></li> @endif
+                    </ul>
+                </li>
+                <li><a href="{{ route('logout') }}" onclick="event.preventDefault();
                                     document.getElementById('logout-form').submit();">
-            {{ __('Logout') }}
-          </a>
+                        {{ __('Logout') }}
+                    </a>
 
-          <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-            @csrf
-          </form>
-        </li>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
+                </li>
 
-      </ul>
-    </nav>
-  </header>
+            </ul>
+        </nav>
+    </header>
 
     <!-- banner -->
     <!-- content here -->
@@ -123,7 +120,10 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="section-heading ">
-                    <h2>  Your Final Year Projects </h2>
+                    <h2> Your Final Year Projects </h2><br><br>
+                    <div class="caption header-text text-light">
+                        <h6><em>UPDATE PROJECTS THAT YOU ARE SUPERVISING</em></h6>
+                    </div>
                 </div>
             </div>
             <div class="col-md-11 ">
@@ -141,12 +141,10 @@
                             <th>Duration (in months) </th>
                             <th>Start Date</th>
                             <th>End Date</th>
-                            <th>Delete</th>
                             <th>Update</th>
                         </tr>
                     </thead>
                     @foreach($project as $dataproject)
-                    @if($dataproject->superviserid == Auth::user()->userid)
                     <tr>
                         <td>{{$dataproject["projecttitle"]}}</td>
                         @foreach($student as $datastudent)
@@ -176,13 +174,27 @@
                         <td>{{$dataproject->duration ?? "Not yet Set"}}</td>
                         <td> {{$dataproject->startdate ?? "Not yet Set"}}</td>
                         <td>{{$dataproject->enddate ?? "Not yet Set"}}</td>
-                        <td><a href={{"/deleteproject/".$dataproject["projectid"]}}>Delete</a></td>
-                        <td><a href={{"/updateproject/".$dataproject["projectid"]}}>Update</a></td>
+                        @if(Auth::user()->userid == $dataproject->superviserid) <td><a href={{"/updateproject/".$dataproject["projectid"]}}><button type="button" class="btn btn-outline-info external">Update</button></a> </td>
+                        @else <td><a href={{"/updateproject/".$dataproject["projectid"]}}><button type="button" class="btn btn-outline-secondary external" disabled>Update</button></a> </td>@endif
+
                     </tr>
-                    
-                    @endif
+
+
                     @endforeach
                 </table>
+                <!-- <span>
+                    {{$project->render()}}
+                </span> -->
+
+                <div class="row justify-content-center">
+                    <span>
+                        {{$project->render()}}
+                    </span>
+                </div>
+                <br><br>
+                <div class="row justify-content-center">
+                    @if(Auth::user()->usertype=="FYP Coordinator") <a href="/create"><button type="button" class="btn btn-outline-warning external">Assign Projects</button></a> @endif
+                </div>
 
                 <!-- Content Division -->
 
@@ -191,6 +203,7 @@
                 <!-- table end -->
             </div>
         </div>
+
     </section>
     <!-- Div end -->
 
@@ -208,10 +221,15 @@
             </div>
         </div>
     </footer>
-
+    <style>
+        .w-5 {
+            display: none
+        }
+    </style>
     <!-- Footer end -->
     <!-- Scripts -->
     <!-- Bootstrap core JavaScript -->
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

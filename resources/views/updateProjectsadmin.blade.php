@@ -75,8 +75,17 @@
                 })
             });
         </script>
+        <style>
+            .form-control:disabled,
+            .form-control:read-only {
+                border-color: dimgrey;
+                color: black;
+                background-color: grey;
+            }
+        </style>
 
     </head>
+    <!--header-->
     <header class="main-header clearfix" role="header">
         <div class="logo">
             <a href="#"><em>FYP</em> Manager</a>
@@ -88,13 +97,13 @@
                 <li class="has-submenu"><a href="">Students</a>
                     <ul class="sub-menu">
                         <li><a href="/displaystudents" class="external">View Students</a></li>
-                        <li><a href="/add" class="external">Add Students</a></li>
+                        @if(Auth::user()->usertype=="FYP Coordinator") <li><a href="/add" class="external">Add Students</a></li> @endif
                     </ul>
                 </li>
                 <li class="has-submenu"><a href="">Projects</a>
                     <ul class="sub-menu">
                         <li><a href="/displayprojects" class="external">View Projects</a></li>
-                        <li><a href="/create" class="external">Add Projects</a></li>
+                        @if(Auth::user()->usertype=="FYP Coordinator")<li><a href="/create" class="external">Add Projects</a></li> @endif
                     </ul>
                 </li>
                 <li><a href="{{ route('logout') }}" onclick="event.preventDefault();
@@ -148,14 +157,14 @@
                     <div class="form-row">
                         <div class="form-group col">
                             <label for="category" class="text-light"> Category </label>
-                            <select name="category" class="form-control" id="category">
+                            <select name="category" class="custom-select" id="category">
                                 <option value="Research Project">Research Project</option>
                                 <option value="Development Project">Development Project </option>
                             </select>
                         </div>
                         <div class="form-group col">
                             <label for="superviserid" class="text-light"> Superviser ID </label>
-                            <select name="superviserid" class="form-control" id="superviserid">
+                            <select name="superviserid" class="custom-select" id="superviserid">
                                 @foreach($teacher as $datateacher)
                                 @if ($datateacher['usertype']=='Superviser')
                                 <option value="{{$datateacher["userid"]}}" @if($selected->superviserid == $datateacher->userid) selected @endif> {{$datateacher["name"]}} </option>
@@ -168,7 +177,7 @@
                     <div class="form-row">
                         <div class="form-group col">
                             <label for="examinerid1" class="text-light"> Examiner 1 Name : </label>
-                            <select name="examinerid1" class="form-control" id="examinerid1">
+                            <select name="examinerid1" class="custom-select" id="examinerid1">
                                 @foreach($teacher as $datateacher)
                                 @if ($datateacher['usertype']=='Superviser')
                                 <option value="{{$datateacher["userid"]}}" @if($selected->examinerid1 == $datateacher->userid) selected @endif> {{$datateacher["name"]}} </option>
@@ -178,7 +187,7 @@
                         </div>
                         <div class="form-group col">
                             <label for="examinerid2" class="text-light"> Examiner 2 Name : </label>
-                            <select name="examinerid2" class="form-control" id="examinerid2">
+                            <select name="examinerid2" class="custom-select " id="examinerid2">
                                 @foreach($teacher as $datateacher)
                                 @if ($datateacher['usertype']=='Superviser')
                                 <option value="{{$datateacher["userid"]}}" @if($selected->examinerid2 == $datateacher->userid) selected @endif> {{$datateacher["name"]}} </option>

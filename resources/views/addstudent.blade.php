@@ -23,39 +23,39 @@
 
     </head>
     <!--header-->
-  <header class="main-header clearfix" role="header">
-    <div class="logo">
-      <a href="#"><em>FYP</em> Manager</a>
-    </div>
-    <a href="#menu" class="menu-link"><i class="fa fa-bars"></i></a>
-    <nav id="menu" class="main-nav" role="navigation">
-      <ul class="main-menu">
-        <li><a href="/home" class="external">Home</a></li>
-        <li class="has-submenu"><a href="">Students</a>
-          <ul class="sub-menu">
-            <li><a href="/displaystudents" class="external">View Students</a></li>
-            @if(Auth::user()->usertype=="FYP Coordinator") <li><a href="/add" class="external">Add Students</a></li> @endif
-          </ul>
-        </li>
-        <li class="has-submenu"><a href="">Projects</a>
-          <ul class="sub-menu">
-            <li><a href="/displayprojects" class="external">View Projects</a></li>
-            @if(Auth::user()->usertype=="FYP Coordinator")<li><a href="/create" class="external">Add Projects</a></li> @endif
-          </ul>
-        </li>
-        <li><a href="{{ route('logout') }}" onclick="event.preventDefault();
+    <header class="main-header clearfix" role="header">
+        <div class="logo">
+            <a href="#"><em>FYP</em> Manager</a>
+        </div>
+        <a href="#menu" class="menu-link"><i class="fa fa-bars"></i></a>
+        <nav id="menu" class="main-nav" role="navigation">
+            <ul class="main-menu">
+                <li><a href="/home" class="external">Home</a></li>
+                <li class="has-submenu"><a href="">Students</a>
+                    <ul class="sub-menu">
+                        <li><a href="/displaystudents" class="external">View Students</a></li>
+                        @if(Auth::user()->usertype=="FYP Coordinator") <li><a href="/add" class="external">Add Students</a></li> @endif
+                    </ul>
+                </li>
+                <li class="has-submenu"><a href="">Projects</a>
+                    <ul class="sub-menu">
+                        <li><a href="/displayprojects" class="external">View Projects</a></li>
+                        @if(Auth::user()->usertype=="FYP Coordinator")<li><a href="/create" class="external">Add Projects</a></li> @endif
+                    </ul>
+                </li>
+                <li><a href="{{ route('logout') }}" onclick="event.preventDefault();
                                     document.getElementById('logout-form').submit();">
-            {{ __('Logout') }}
-          </a>
+                        {{ __('Logout') }}
+                    </a>
 
-          <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-            @csrf
-          </form>
-        </li>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
+                </li>
 
-      </ul>
-    </nav>
-  </header>
+            </ul>
+        </nav>
+    </header>
 
 
     <section class="section courses min-vh-100" data-section="section4">
@@ -82,13 +82,8 @@
 
                         </div>
                     </div>
-                    <div class="col-auto">
-                        <input type=submit class="btn btn-primary mb-2" value="Add Record">
-                    </div>
-                    <div class="col-auto">
-                        <input type=reset class="btn btn-secondary mb-2" value="Reset">
-                    </div>
-
+                    <input type=reset class="btn btn-secondary mb-2" value="Reset">
+                    <input type=submit class="btn btn-primary mb-2" value="Add Record">
                 </form>
 
             </div>

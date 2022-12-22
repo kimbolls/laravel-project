@@ -216,7 +216,7 @@
                 <div class="col-md-12">
                     <p><i class="fa fa-copyright"></i> Made by Hakim
 
-                        | <a href="https://templatemo.com" rel="sponsored" target="_parent">SW01080783</a></p>
+                        | <a href="" rel="sponsored" target="_parent">SW01080783</a></p>
                 </div>
             </div>
         </div>

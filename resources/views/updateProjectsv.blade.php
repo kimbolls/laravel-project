@@ -75,8 +75,17 @@
                 })
             });
         </script>
-
+        <style>
+            .form-control:disabled,
+            .form-control:read-only {
+                border-color: dimgrey;
+                color: black;
+                background-color: grey;
+            }
+        </style>
+       
     </head>
+    <!--header-->
     <header class="main-header clearfix" role="header">
         <div class="logo">
             <a href="#"><em>FYP</em> Manager</a>
@@ -88,13 +97,13 @@
                 <li class="has-submenu"><a href="">Students</a>
                     <ul class="sub-menu">
                         <li><a href="/displaystudents" class="external">View Students</a></li>
-                        <li><a href="/add" class="external">Add Students</a></li>
+                        @if(Auth::user()->usertype=="FYP Coordinator") <li><a href="/add" class="external">Add Students</a></li> @endif
                     </ul>
                 </li>
                 <li class="has-submenu"><a href="">Projects</a>
                     <ul class="sub-menu">
                         <li><a href="/displayprojects" class="external">View Projects</a></li>
-                        <li><a href="/create" class="external">Add Projects</a></li>
+                        @if(Auth::user()->usertype=="FYP Coordinator")<li><a href="/create" class="external">Add Projects</a></li> @endif
                     </ul>
                 </li>
                 <li><a href="{{ route('logout') }}" onclick="event.preventDefault();
@@ -133,14 +142,14 @@
                             <input type="hidden" name="studentid" value={{$selected["studentid"]}}>
                             <input type="hidden" name="projectid" value={{$selected["projectid"]}}>
                             @if($selected["studentid"] == $datastudent["studentid"])
-                            <input type="name" class="form-control" name="studentname" class="form-control" required value={{$datastudent["username"]}} disabled>
+                            <input type="name" class="form-control " name="studentname" class="form-control" required value={{$datastudent["username"]}} disabled>
                         </div>
                         @endif
                         @endforeach
                         <!-- title -->
                         <div class="form-group col">
                             <label for="projectittle" class="text-light"> Project Title </label>
-                            <input type="name" class="form-control" readonly name="projecttitle" value={{$selected->projecttitle}}>
+                            <input type="name" class="form-control " readonly name="projecttitle" value={{$selected->projecttitle}}>
                         </div>
                     </div>
 
@@ -192,19 +201,19 @@
                     <div class="form-row">
                         <div class="form-group col">
                             <label for="startdate" class="text-light"> Start Date : </label>
-                            <input type="date" class="form-control "  required name="startdate" id="startdate" value={{$selected->startdate}}>
+                            <input type="date" class="form-control " required name="startdate" id="startdate" value={{$selected->startdate}}>
                         </div>
                         <div class="form-group col">
                             <label for="startdate" class="text-light"> End Date : </label>
-                            <input type="date" class="form-control "   required name="enddate" id="enddate" value={{$selected->enddate}}>
+                            <input type="date" class="form-control " required name="enddate" id="enddate" value={{$selected->enddate}}>
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group col">
                             <label for="progress" class="text-light"> Progress : </label>
-                            <select name="progress" class="form-control "  required id="progress">
-                            <option value="" @if($selected->progress == "") selected @endif> Not Yet Set </option>
+                            <select name="progress" class="custom-select" required id="progress">
+                                <option value="" @if($selected->progress == "") selected @endif> Not Yet Set </option>
                                 <option value="Milestone 1" @if($selected->progress == "Milestone 1") selected @endif> Milestone 1</option>
                                 <option value="Milestone 2" @if($selected->progress == "Milestone 2") selected @endif> Milestone 2</option>
                                 <option value="Final Report" @if($selected->progress == "Final Report") selected @endif> Final Report</option>
@@ -212,7 +221,7 @@
                         </div>
                         <div class="form-group col">
                             <label for="status" class="text-light"> Status : </label>
-                            <select name="status" class="form-control "  required id="status">
+                            <select name="status" class="custom-select" required id="status">
                                 <option value="" @if($selected->status == "") selected @endif> Not Yet Set </option>
                                 <option value="On Track" @if($selected->status == "On track") selected @endif> On Track</option>
                                 <option value="Delayed" @if($selected->status == "Delayed") selected @endif> Delayed</option>
@@ -229,8 +238,8 @@
                         </div>
                     </div>
                     <input type=reset class="btn btn-secondary mb-2" value="Reset">
-                    <input type=submit class="btn btn-primary mb-2"value="Update Project">
-                    
+                    <input type=submit class="btn btn-primary mb-2" value="Update Project">
+
 
 
                 </form>

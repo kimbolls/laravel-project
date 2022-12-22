@@ -23,7 +23,9 @@ Route::get('/', function () {
 
 Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::view('/add','addstudent');
+
+
+Route::get('/add',[HomeController::class,'displayAddStudent']);
 Route::post('/adddata',[HomeController::class,'addnewstudent']);
 
 Route::get('/create',[HomeController::class,'displayAddProject']);
