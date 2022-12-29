@@ -78,7 +78,7 @@
                         <tr>
                             <th>Project Title</th>
                             <th>Student Name</th>
-                            <th>Project Category</th>
+                            <!-- <th>Project Category</th> -->
                             <th>Superviser Name </th>
                             <th>Examiner 1 Name</th>
                             <th>Examiner 2 Name</th>
@@ -100,7 +100,7 @@
                         @endif
                         @endforeach
 
-                        <td>{{$dataproject["category"]}}</td>
+                        <!-- <td>{{$dataproject["category"]}}</td> -->
                         @foreach($teacher as $datateacher)
                         @if($dataproject["superviserid"] == $datateacher["userid"])
                         <td> {{$datateacher["name"]}}</td>
